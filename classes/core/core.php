@@ -7,8 +7,8 @@ class Wrap{
 		'string' => 'StringH',
 	);
 
-	protected static function auto_load($class){
-		$class = strtolower(preg_replace("/([A-Z])/", ".$1", $class));
+	public static function auto_load($class){
+		$class = strtolower(preg_replace("/([A-Z])$/", ".$1", $class));
 		try{
 			require_once $class . '.php';
 		} catch(Exception $e){
@@ -59,7 +59,7 @@ class Wrap{
 
 					if(isset($helper) && method_exists($helper,$func)){
 						$_r = call_user_func_array(array($helper,$func), $h_args);
-					}else if(method_exists($value,$func) || method_exists($value,'__call')){
+					}else if(gettype($value) == 'object' && (method_exists($value,$func) || method_exists($value,'__call'))){
 						$_r = call_user_func_array(array($value,$func), $args);
 					}else{
 						$_r = call_user_func_array($func, $h_args);
@@ -78,7 +78,7 @@ class Wrap{
 				if(isset($helper) && method_exists($helper,$func)){	
 					//如果helper方法存在的话，调用helper方法
 					$ret = call_user_func_array(array($helper,$func), $h_args);	 
-				}else if(method_exists($h_args[0],$func) || method_exists($h_args[0],'__call')){ 
+				}else if(gettype($h_args[0]) == "object" && (method_exists($h_args[0],$func) || method_exists($h_args[0],'__call'))){ 
 					//否则调用object方法
 					$ret = call_user_func_array(array($h_args[0],$func), $args);	
 				}else{																			
@@ -99,7 +99,7 @@ class Wrap{
 	}
 }
 
-function W(&$mixed){
+function W($mixed){
 	return new Wrap($mixed);
 }
 
