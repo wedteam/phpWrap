@@ -48,6 +48,7 @@ class ArrayH extends HelperH {
 					}
 				}
 				$ret = $_r;
+				$pat = '';
 			}
 		}
 		
