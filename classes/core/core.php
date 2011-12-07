@@ -60,6 +60,7 @@ class Wrap{
 			array_unshift($args, null);
 			$args[0] = &$this->core;
 			if(is_array($args[0])  
+				&& !method_exists(gettype($args[0]).'H', $func)
 				&& !ArrayH::is_assoc($args[0])){ //区分数组？ query? W($data).query('>data')...
 				//不是 array_ 系列方法时，将array作为集合操作
 				foreach($args[0] as $key => $core){

@@ -47,7 +47,7 @@ class Wrap{
 			$h_args = $args;
 			
 			if($type == 'array' && //如果是数组
-				//!ArrayH::is_assoc($this->core)	&& //并且不是关联数组
+				!ArrayH::is_assoc($this->core)	&& //并且不是关联数组
 				!in_array($func, array('each','map','filter'))){	
 				//如果类型是Array并且调用的不是each、map、filter等数组批量方法
 				//集合操作
@@ -69,7 +69,7 @@ class Wrap{
 					}
 					$ret[] = $_r;
 				}
-				return $ret;
+				return new Wrap($ret);
 			}
 			else{
 				array_unshift($h_args, null);
