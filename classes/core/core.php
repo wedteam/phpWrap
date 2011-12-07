@@ -12,9 +12,9 @@ class Wrap{
 		$class = strtolower(preg_replace("/([A-Z])$/", ".$1", $class));
 		try{
 			require_once $class . '.php';
+			return true;
 		} catch(Exception $e){
-			throw new Exception($e);
-			die;
+			return false;
 		}
 		
 	}
