@@ -57,31 +57,44 @@ class ArrayH extends HelperH {
 	private static function _searchBrotherKey(array &$array, $key, $brother, $find_one = false, $child_olny = false){
 		$key_match = null; $brother_match = null;
 		$ret = array();
-		foreach($array as $k => &$v){
-			if($key === $k){
-				$key_match = &$v;
-			}else if($brother === $k){
-				$brother_match = $v;
+		if($child_only){
+			if(array_key_exists($key, $array) && array_key_exists($brother, $array)){
+				$ret[] = &$array[$key];
 			}
-			if(isset($key_match) && isset($brother_match)){
-				$ret[] = &$key_match;
-			}else if(!$child_only && is_array($v)){
-				$ret = array_merge($ret, self::_searchBrotherKey($v, $key, $brother, $find_one));
+		}
+		else{
+			foreach($array as $k => &$v){
+				if($key === $k){
+					$key_match = &$v;
+				}else if($brother === $k){
+					$brother_match = $v;
+				}
+				if(isset($key_match) && isset($brother_match)){
+					$ret[] = &$key_match;
+				}else if(is_array($v)){
+					$ret = array_merge($ret, self::_searchBrotherKey($v, $key, $brother, $find_one));
+				}
+				if($find_one && count($ret) > 0) return $ret; //如果只找一个，找到就返回
 			}
-			if(($find_one || $child_only) && count($ret) > 0) return $ret; //如果只找一个，找到就返回
 		}
 		return $ret;
 	}
 
 	private static function _searchKey(array &$array, $key, $find_one = false, $child_only = false){
 		$ret = array();
-		foreach($array as $k => &$v){
-			if($key === $k){
-				$ret[] = &$v;
-			}else if(!$child_only && is_array($v)){
-				$ret = array_merge($ret, self::_searchKey($v, $key, $find_one));
+		if($child_only){
+			if(array_key_exists($key, $array)){
+				$ret[] = &$array[$key];
 			}
-			if(($find_one || $child_only)&& count($ret) > 0) return $ret; //如果只找一个，找到就返回
+		}else{
+			foreach($array as $k => &$v){
+				if($key === $k){
+					$ret[] = &$v;
+				}else if(is_array($v)){
+					$ret = array_merge($ret, self::_searchKey($v, $key, $find_one));
+				}
+				if($find_one&& count($ret) > 0) return $ret; //如果只找一个，找到就返回
+			}
 		}
 		return $ret;
 	}
