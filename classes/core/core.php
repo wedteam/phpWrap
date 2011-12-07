@@ -60,19 +60,19 @@ class Wrap{
 			array_unshift($args, null);
 			$args[0] = &$this->core;
 			if(is_array($args[0])  
-				&& !method_exists(gettype($args[0]).'H', $func)
+				&& !method_exists(self::$helpers['array'], $func)
 				&& !ArrayH::is_assoc($args[0])){ //区分数组？ query? W($data).query('>data')...
 				//不是 array_ 系列方法时，将array作为集合操作
 				foreach($args[0] as $key => $core){
-					$helper = gettype($args[0][$key]).'H';
-					if(method_exists($helper, $func)){
+					$helper = gettype($args[0][$key]);
+					if(method_exists(self::$helpers[$helper], $func)){
 						$func = array($helper,$func); 
 					}
 					$args[0][$key] = call_user_func_array($func, array_merge(array($args[0][$key]),array_slice($args,1)));
 				}
 			}else{
-				$helper = gettype($args[0]).'H'; 
-				if(method_exists($helper, $func)){
+				$helper = gettype($args[0]); 
+				if(method_exists(self::$helpers[$helper], $func)){
 					$func = array($helper, $func);
 				}
 				$args[0] = call_user_func_array($func, $args);
